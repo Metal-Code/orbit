@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { AddEntryModal } from "@/components/AddEntryModal";
 import { EntryDetailPanel } from "@/components/EntryDetailPanel";
+import { ShareProjectModal } from "@/components/ShareProjectModal";
 import { TypeBadge } from "@/components/TypeBadge";
 import { api, TOKEN_KEY } from "@/lib/api";
 import type { Project, TimelineEntry } from "@/lib/types";
@@ -22,6 +23,8 @@ function TimelinePage() {
   const [project, setProject] = useState<Project | null>(null);
   const [entries, setEntries] = useState<TimelineEntry[] | null>(null);
   const [showAdd, setShowAdd] = useState(false);
+  const [showShare, setShowShare] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
   const [selected, setSelected] = useState<TimelineEntry | null>(null);
   // Initialize order synchronously from localStorage so we never persist the default first
   const [order, setOrder] = useState<Order>(() => {
@@ -78,7 +81,17 @@ function TimelinePage() {
       navigate({ to: "/login" });
       return;
     }
+    api.get("/auth/me").then((r) => setIsOwner(r.data?.role === "owner")).catch(() => {});
     load();
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") load();
+    }, 5000);
+    const onVis = () => { if (document.visibilityState === "visible") load(); };
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVis);
+    };
   }, [load, navigate]);
 
   const rows = useMemo(() => {
@@ -118,6 +131,9 @@ function TimelinePage() {
             <span className="order-flip-label">{order === "oldTop" ? "New" : "Old"}</span>
           </button>
           <button className="btn btn-primary" onClick={() => setShowAdd(true)}>+ Add Entry</button>
+          {isOwner && (
+            <button className="btn btn-secondary" onClick={() => setShowShare(true)}>Share Project</button>
+          )}
         </div>
       </div>
 
@@ -170,6 +186,9 @@ function TimelinePage() {
         />
       )}
       {selected && <EntryDetailPanel entry={selected} onClose={() => setSelected(null)} />}
+      {showShare && (
+        <ShareProjectModal projectId={Number(id)} onClose={() => setShowShare(false)} />
+      )}
     </div>
   );
 }
