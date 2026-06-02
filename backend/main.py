@@ -2,10 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from core.database import engine, Base
 
-# Import all models so SQLAlchemy knows about them before create_all
 from models.organization import Organization
 from models.user import User
 from models.project import Project
+from models.project_member import ProjectMember
 from models.timeline_entry import TimelineEntry
 from models.link import Link
 
@@ -17,7 +17,7 @@ app = FastAPI(title="DevCycle API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:8080", "http://localhost:8081"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

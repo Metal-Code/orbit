@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as JoinRouteImport } from './routes/join'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProjectsIdTimelineRouteImport } from './routes/projects.$id.timeline'
@@ -23,6 +24,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinRoute = JoinRouteImport.update({
+  id: '/join',
+  path: '/join',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -44,6 +50,7 @@ const ProjectsIdTimelineRoute = ProjectsIdTimelineRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/join': typeof JoinRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/projects/$id/timeline': typeof ProjectsIdTimelineRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/join': typeof JoinRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/projects/$id/timeline': typeof ProjectsIdTimelineRoute
@@ -59,6 +67,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/join': typeof JoinRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/projects/$id/timeline': typeof ProjectsIdTimelineRoute
@@ -68,15 +77,23 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/join'
     | '/login'
     | '/register'
     | '/projects/$id/timeline'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/login' | '/register' | '/projects/$id/timeline'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/join'
+    | '/login'
+    | '/register'
+    | '/projects/$id/timeline'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
+    | '/join'
     | '/login'
     | '/register'
     | '/projects/$id/timeline'
@@ -85,6 +102,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
+  JoinRoute: typeof JoinRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   ProjectsIdTimelineRoute: typeof ProjectsIdTimelineRoute
@@ -104,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join': {
+      id: '/join'
+      path: '/join'
+      fullPath: '/join'
+      preLoaderRoute: typeof JoinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -133,6 +158,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
+  JoinRoute: JoinRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   ProjectsIdTimelineRoute: ProjectsIdTimelineRoute,

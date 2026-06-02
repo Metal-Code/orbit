@@ -2,21 +2,24 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 
 interface Props {
-  orgId: number;
+  projectId: number;
+  /** Optional: skip fetching and use this code directly (e.g. just-created project). */
+  initialCode?: string;
   onClose: () => void;
 }
 
-export function InviteModal({ orgId, onClose }: Props) {
-  const [code, setCode] = useState<string | null>(null);
+export function ShareProjectModal({ projectId, initialCode, onClose }: Props) {
+  const [code, setCode] = useState<string | null>(initialCode ?? null);
   const [err, setErr] = useState("");
   const [copied, setCopied] = useState<"code" | "link" | null>(null);
 
   useEffect(() => {
+    if (initialCode) return;
     api
-      .get(`/organizations/${orgId}`)
+      .get(`/projects/${projectId}/invite-code`)
       .then((r) => setCode(r.data.invite_code))
       .catch(() => setErr("Failed to load invite code"));
-  }, [orgId]);
+  }, [projectId, initialCode]);
 
   const link =
     code && typeof window !== "undefined"
@@ -28,17 +31,15 @@ export function InviteModal({ orgId, onClose }: Props) {
       await navigator.clipboard.writeText(text);
       setCopied(which);
       setTimeout(() => setCopied(null), 1500);
-    } catch {
-      /* ignore */
-    }
+    } catch { /* ignore */ }
   };
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-title">Invite to organization</div>
+        <div className="modal-title">Share project</div>
         <p style={{ color: "var(--text-dim)", fontSize: 13, marginBottom: 14 }}>
-          Share the invite code or the joining link with your teammates.
+          Share this invite code or link with teammates to give them access to this project.
         </p>
 
         {err && <div className="error-text">{err}</div>}

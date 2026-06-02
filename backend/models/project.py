@@ -11,6 +11,8 @@ class Project(Base):
     description = Column(String, nullable=True)
     org_id = Column(Integer, ForeignKey("organizations.id"), nullable=False)
     created_by = Column(Integer, nullable=True)
+    invite_code = Column(String, unique=True, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     timeline_entries = relationship("TimelineEntry", back_populates="project")
+    members = relationship("ProjectMember", backref="project")

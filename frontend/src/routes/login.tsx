@@ -23,9 +23,20 @@ function LoginPage() {
       const r = await api.post("/auth/login", { email, password });
       localStorage.setItem(TOKEN_KEY, r.data.access_token);
       const me = await api.get("/auth/me");
+      const pending = localStorage.getItem("devcycle.pending_invite");
+
       if (me.data.org_id == null) {
+        if (pending) {
+          localStorage.removeItem("devcycle.pending_invite");
+          try {
+            await api.post(`/organizations/join?invite_code=${encodeURIComponent(pending)}`);
+            navigate({ to: "/dashboard" });
+            return;
+          } catch { /* fall through to org setup */ }
+        }
         setShowOrg(true);
       } else {
+        // pending invite (if any) will be consumed as a project join on dashboard
         navigate({ to: "/dashboard" });
       }
     } catch (e: any) {

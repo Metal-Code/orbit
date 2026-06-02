@@ -12,6 +12,7 @@ class ProjectResponse(BaseModel):
     description: Optional[str]
     org_id: int
     created_by: int
+    invite_code: str
     created_at: datetime
 
     class Config:

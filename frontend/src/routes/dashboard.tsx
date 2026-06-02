@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { NewProjectModal } from "@/components/NewProjectModal";
-import { InviteModal } from "@/components/InviteModal";
+import { JoinProjectModal } from "@/components/JoinProjectModal";
 import { api, TOKEN_KEY } from "@/lib/api";
 import type { EntryType, Project, TimelineEntry } from "@/lib/types";
 
@@ -10,6 +10,8 @@ export const Route = createFileRoute("/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — DevCycle" }] }),
   component: Dashboard,
 });
+
+const PENDING_INVITE_KEY = "devcycle.pending_invite";
 
 const TYPE_COLOR: Record<EntryType, string> = {
   Dev: "var(--dev)",
@@ -35,7 +37,7 @@ function Dashboard() {
   const [projects, setProjects] = useState<Project[] | null>(null);
   const [recent, setRecent] = useState<Record<number, TimelineEntry[]>>({});
   const [showNew, setShowNew] = useState(false);
-  const [inviteOrgId, setInviteOrgId] = useState<number | null>(null);
+  const [showJoin, setShowJoin] = useState(false);
   const navigate = useNavigate();
 
   const load = useCallback(async () => {
@@ -66,7 +68,17 @@ function Dashboard() {
       navigate({ to: "/login" });
       return;
     }
-    load();
+    // Consume pending invite (from /join?code=...) — user already has an org here,
+    // so try joining a project.
+    const pending = typeof window !== "undefined" ? localStorage.getItem(PENDING_INVITE_KEY) : null;
+    if (pending) {
+      localStorage.removeItem(PENDING_INVITE_KEY);
+      api.post(`/projects/join?invite_code=${encodeURIComponent(pending)}`)
+        .catch(() => {})
+        .finally(() => load());
+    } else {
+      load();
+    }
   }, [load, navigate]);
 
   return (
@@ -75,12 +87,17 @@ function Dashboard() {
       <div className="page">
         <div className="page-header">
           <h1 className="page-title">Projects</h1>
-          <button className="btn btn-primary" onClick={() => setShowNew(true)}>+ New Project</button>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button className="btn btn-secondary" onClick={() => setShowJoin(true)}>
+              Join Project
+            </button>
+            <button className="btn btn-primary" onClick={() => setShowNew(true)}>+ New Project</button>
+          </div>
         </div>
         {projects === null ? (
           <div className="spinner-page">Loading...</div>
         ) : projects.length === 0 ? (
-          <div className="empty">No projects yet. Create your first one to start tracking.</div>
+          <div className="empty">No projects yet. Create your first one or join with an invite code.</div>
         ) : (
           <div className="project-grid">
             {projects.map((p) => {
@@ -116,9 +133,6 @@ function Dashboard() {
                     <Link to="/projects/$id/timeline" params={{ id: String(p.id) }} className="btn btn-secondary">
                       View Timeline →
                     </Link>
-                    <button className="btn btn-secondary" onClick={() => setInviteOrgId(p.org_id)}>
-                      Invite
-                    </button>
                   </div>
                 </div>
               );
@@ -132,8 +146,11 @@ function Dashboard() {
           onCreated={() => { setShowNew(false); load(); }}
         />
       )}
-      {inviteOrgId !== null && (
-        <InviteModal orgId={inviteOrgId} onClose={() => setInviteOrgId(null)} />
+      {showJoin && (
+        <JoinProjectModal
+          onClose={() => setShowJoin(false)}
+          onJoined={() => { setShowJoin(false); load(); }}
+        />
       )}
     </div>
   );

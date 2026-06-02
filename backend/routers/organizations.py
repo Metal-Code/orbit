@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from core.database import get_db
 from schemas.organization import OrganizationCreate, OrganizationResponse
 from services.organization_service import create_organization, join_organization, get_organization
+from models.organization import Organization
 from dependencies.auth import get_current_user
 
 router = APIRouter(prefix="/organizations", tags=["Organizations"])
@@ -21,9 +22,21 @@ def join_org(invite_code: str, db: Session = Depends(get_db), current_user = Dep
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@router.get("/{org_id}", response_model=OrganizationResponse)
+def get_org_by_id(org_id: int, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
+    if current_user.org_id != org_id:
+        raise HTTPException(status_code=403, detail="You do not have access to this organization")
+    
+    org = db.query(Organization).filter(Organization.id == org_id).first()
+    if not org:
+        raise HTTPException(status_code=404, detail="Organization not found")
+    
+    return org
+
 @router.get("/me", response_model=OrganizationResponse)
 def get_my_org(db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     try:
         return get_organization(db, current_user)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
