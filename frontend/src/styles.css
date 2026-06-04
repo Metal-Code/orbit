@@ -469,11 +469,15 @@ input, textarea, select { font-family: inherit; }
 .timeline-connector {
   position: absolute;
   top: 50%;
-  height: 0;
-  border-top: 1px solid #404040;
+  height: 1px;
   transform: translateY(-50%);
+  background: linear-gradient(90deg, var(--entry-color, #404040), color-mix(in oklab, var(--entry-color, #404040) 10%, transparent));
 }
-.timeline-connector.left { right: 50%; width: 80px; }
+.timeline-connector.left {
+  right: 50%;
+  width: 80px;
+  background: linear-gradient(270deg, var(--entry-color, #404040), color-mix(in oklab, var(--entry-color, #404040) 10%, transparent));
+}
 .timeline-connector.right { left: 50%; width: 80px; }
 .timeline-timestamp {
   position: absolute;
@@ -494,13 +498,14 @@ input, textarea, select { font-family: inherit; }
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 9px;
-  height: 9px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
   background: var(--bg);
-  border: 2px solid var(--border-strong);
+  border: 2px solid var(--entry-color, var(--border-strong));
   transform: translate(-50%, -50%);
   z-index: 2;
+  box-shadow: 0 0 12px color-mix(in oklab, var(--entry-color, transparent) 45%, transparent);
 }
 
 .timeline-entry-card {

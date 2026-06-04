@@ -154,7 +154,11 @@ function TimelinePage() {
               const dt = new Date(entry.created_at);
               const stamp = `${dt.toLocaleDateString(undefined, { day: "2-digit", month: "short" })}\n${dt.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}`;
               return (
-                <div className="timeline-row" key={entry.id}>
+                <div
+                  className="timeline-row"
+                  key={entry.id}
+                  style={{ ["--entry-color" as any]: `var(--${entry.type.toLowerCase()})` }}
+                >
                   <div className="timeline-side left">
                     {isLeft && <EntryCard entry={entry} onClick={() => setSelected(entry)} />}
                   </div>
