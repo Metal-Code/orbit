@@ -6,7 +6,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "DevCycle — The complete story of how YOUR Product is being built" },
-      { name: "description", content: "Track every decision, milestone, and commit from day one to launch." },
+      { name: "description", content: "Track every decision, milestone, and commit from day one and beyond." },
     ],
   }),
   component: Landing,
@@ -126,7 +126,7 @@ function Landing() {
               lineHeight: 1.55,
             }}
           >
-            Track every decision, milestone, and commit from day one to launch.
+            Track every decision, milestone, and commit from day one and beyond.
           </p>
           <div>
             <Link to="/register" className="btn btn-primary" style={{ padding: "11px 22px" }}>
