@@ -4,6 +4,7 @@ import { Navbar } from "@/components/Navbar";
 import { AddEntryModal } from "@/components/AddEntryModal";
 import { EntryDetailPanel } from "@/components/EntryDetailPanel";
 import { ShareProjectModal } from "@/components/ShareProjectModal";
+import { TimelineChatbot } from "@/components/TimelineChatbot";
 import { TypeBadge } from "@/components/TypeBadge";
 import { api, TOKEN_KEY } from "@/lib/api";
 import type { Project, TimelineEntry } from "@/lib/types";
@@ -193,6 +194,7 @@ function TimelinePage() {
       {showShare && (
         <ShareProjectModal projectId={Number(id)} onClose={() => setShowShare(false)} />
       )}
+      <TimelineChatbot projectId={id} />
     </div>
   );
 }
