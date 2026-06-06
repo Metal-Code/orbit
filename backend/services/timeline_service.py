@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from models.timeline_entry import TimelineEntry
 from models.link import Link
+from models.attachment import Attachment
 from models.user import User
 from schemas.timeline_entry import TimelineEntryCreate
 
@@ -24,6 +25,16 @@ def create_entry(db: Session, project_id: int, entry_data: TimelineEntryCreate, 
             timeline_entry_id=new_entry.id
         )
         db.add(new_link)
+
+    for attachment in entry_data.attachments:
+        new_attachment = Attachment(
+            file_name=attachment.file_name,
+            file_url=attachment.file_url,
+            file_type=attachment.file_type,
+            timeline_entry_id=new_entry.id
+        )
+        db.add(new_attachment)
+
     db.commit()
     db.refresh(new_entry)
     return new_entry

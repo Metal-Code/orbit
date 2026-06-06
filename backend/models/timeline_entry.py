@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
-from core.database import Base
-from datetime import datetime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
+from datetime import datetime
+from core.database import Base
 
 class TimelineEntry(Base):
     __tablename__ = "timeline_entries"
@@ -17,3 +17,4 @@ class TimelineEntry(Base):
 
     project = relationship("Project", back_populates="timeline_entries")
     links = relationship("Link", back_populates="timeline_entry")
+    attachments = relationship("Attachment", back_populates="timeline_entry")
