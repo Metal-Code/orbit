@@ -1,9 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Building2, FolderGit2 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { AddEntryModal } from "@/components/AddEntryModal";
 import { EntryDetailPanel } from "@/components/EntryDetailPanel";
 import { ShareProjectModal } from "@/components/ShareProjectModal";
+import { InviteModal } from "@/components/InviteModal";
 import { TimelineChatbot } from "@/components/TimelineChatbot";
 import { TypeBadge } from "@/components/TypeBadge";
 import { api, TOKEN_KEY } from "@/lib/api";
@@ -25,7 +27,9 @@ function TimelinePage() {
   const [entries, setEntries] = useState<TimelineEntry[] | null>(null);
   const [showAdd, setShowAdd] = useState(false);
   const [showShare, setShowShare] = useState(false);
+  const [showInviteOrg, setShowInviteOrg] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
+  const [orgId, setOrgId] = useState<number | null>(null);
   const [selected, setSelected] = useState<TimelineEntry | null>(null);
   // Initialize order synchronously from localStorage so we never persist the default first
   const [order, setOrder] = useState<Order>(() => {
@@ -82,7 +86,10 @@ function TimelinePage() {
       navigate({ to: "/login" });
       return;
     }
-    api.get("/auth/me").then((r) => setIsOwner(r.data?.role === "owner")).catch(() => {});
+    api.get("/auth/me").then((r) => {
+      setIsOwner(r.data?.role === "owner");
+      setOrgId(r.data?.org_id ?? null);
+    }).catch(() => {});
     load();
     const interval = setInterval(() => {
       if (document.visibilityState === "visible") load();
@@ -114,10 +121,9 @@ function TimelinePage() {
 
   return (
     <div className="timeline-page">
-      <Navbar showBack />
+      <Navbar showBack title={project?.name} hideOrgInvite />
       <div className="timeline-header">
-        <h1 className="page-title">{project?.name ?? "Timeline"}</h1>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginLeft: "auto" }}>
           <button
             className="order-flip"
             onClick={() => {
@@ -133,7 +139,26 @@ function TimelinePage() {
           </button>
           <button className="btn btn-primary" onClick={() => setShowAdd(true)}>+ Add Entry</button>
           {isOwner && (
-            <button className="btn btn-secondary" onClick={() => setShowShare(true)}>Share Project</button>
+            <div className="split-share" role="group" aria-label="Invite">
+              {orgId != null && (
+                <button
+                  className="split-share-half"
+                  onClick={() => setShowInviteOrg(true)}
+                  title="Invite to Organization"
+                  aria-label="Invite to Organization"
+                >
+                  <Building2 size={16} />
+                </button>
+              )}
+              <button
+                className="split-share-half"
+                onClick={() => setShowShare(true)}
+                title="Invite to Project"
+                aria-label="Invite to Project"
+              >
+                <FolderGit2 size={16} />
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -193,6 +218,9 @@ function TimelinePage() {
       {selected && <EntryDetailPanel entry={selected} onClose={() => setSelected(null)} />}
       {showShare && (
         <ShareProjectModal projectId={Number(id)} onClose={() => setShowShare(false)} />
+      )}
+      {showInviteOrg && orgId != null && (
+        <InviteModal orgId={orgId} onClose={() => setShowInviteOrg(false)} />
       )}
       <TimelineChatbot projectId={id} />
     </div>

@@ -10,15 +10,16 @@ interface Me {
   role: string;
   org_id: number | null;
 }
-interface Org { id: number; name: string }
+
 
 interface Props {
   showBack?: boolean;
+  title?: string;
+  hideOrgInvite?: boolean;
 }
 
-export function Navbar({ showBack }: Props) {
+export function Navbar({ showBack, title, hideOrgInvite }: Props) {
   const [me, setMe] = useState<Me | null>(null);
-  const [org, setOrg] = useState<Org | null>(null);
   const [showInvite, setShowInvite] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">(() => {
     if (typeof window === "undefined") return "dark";
@@ -34,9 +35,6 @@ export function Navbar({ showBack }: Props) {
   useEffect(() => {
     api.get("/auth/me").then((r) => {
       setMe(r.data);
-      if (r.data.org_id) {
-        api.get(`/organizations/${r.data.org_id}`).then((o) => setOrg(o.data)).catch(() => {});
-      }
     }).catch(() => {});
   }, []);
 
@@ -55,9 +53,9 @@ export function Navbar({ showBack }: Props) {
         {showBack && (
           <Link to="/dashboard" className="btn btn-ghost">← Back to Projects</Link>
         )}
-        <Link to="/dashboard" className="navbar-logo">DevCycle</Link>
+        <Link to="/dashboard" className="navbar-logo">{title ?? "DevCycle"}</Link>
       </div>
-      <div className="navbar-center">{org?.name ?? ""}</div>
+      <div className="navbar-center"></div>
       <div className="navbar-right">
         <button
           className="btn btn-ghost"
@@ -67,7 +65,7 @@ export function Navbar({ showBack }: Props) {
         >
           {theme === "dark" ? "☀" : "☾"}
         </button>
-        {isOwner && me?.org_id != null && (
+        {!hideOrgInvite && isOwner && me?.org_id != null && (
           <button className="btn btn-secondary" onClick={() => setShowInvite(true)}>
             Invite to Org
           </button>
@@ -75,7 +73,13 @@ export function Navbar({ showBack }: Props) {
         {me && (
           <>
             <span style={{ fontSize: 13 }}>{me.full_name}</span>
-            <span className="badge">{me.role}</span>
+            <span
+              className="badge role-badge"
+              title={me.role.charAt(0).toUpperCase() + me.role.slice(1)}
+              aria-label={me.role}
+            >
+              {me.role.charAt(0).toUpperCase()}
+            </span>
             <button className="btn btn-secondary" onClick={logout}>Logout</button>
           </>
         )}

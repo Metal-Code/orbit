@@ -61,17 +61,15 @@ export function TimelineChatbot({ projectId }: Props) {
 
   return (
     <>
-      {!open && (
-        <button
-          className="chatbot-fab"
-          style={{ left: 24, right: "auto" }}
-          onClick={() => setOpen(true)}
-          aria-label="Open timeline assistant"
-        >
-          <span className="chatbot-fab-dot" />
-          Ask Timeline
-        </button>
-      )}
+      <button
+        className="chatbot-fab"
+        style={{ left: 24, right: "auto" }}
+        onClick={() => setOpen((o) => !o)}
+        aria-label={open ? "Close timeline assistant" : "Open timeline assistant"}
+      >
+        <span className="chatbot-fab-dot" />
+        {open ? "Close Timeline" : "Ask Timeline"}
+      </button>
 
       {open && (
         <aside
