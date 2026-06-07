@@ -1,23 +1,19 @@
-import axios from "axios";
-
-export const TOKEN_KEY = "devcycle_token";
-
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:8000",
-  headers: { "Content-Type": "application/json" },
+import { a as axios } from "../_libs/axios.mjs";
+const TOKEN_KEY = "devcycle_token";
+const api = axios.create({
+  baseURL: "http://localhost:8000",
+  headers: { "Content-Type": "application/json" }
 });
-
 api.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
     const token = window.localStorage.getItem(TOKEN_KEY);
     if (token) {
       config.headers = config.headers ?? {};
-      (config.headers as Record<string, string>).Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
   }
   return config;
 });
-
 api.interceptors.response.use(
   (r) => r,
   (error) => {
@@ -28,5 +24,9 @@ api.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  },
+  }
 );
+export {
+  TOKEN_KEY as T,
+  api as a
+};
