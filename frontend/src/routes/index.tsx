@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { MoonIcon } from "@/components/icons/MoonIcon";
 import { HeroTimeline } from "@/components/HeroTimeline";
 
 export const Route = createFileRoute("/")({
@@ -60,7 +61,7 @@ function Landing() {
             aria-label="Toggle theme"
             title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
           >
-            {theme === "dark" ? "☀" : "☾"}
+            {theme === "dark" ? "☀" : <MoonIcon size={16} style={{ display: "inline-block", verticalAlign: "-3px" }} />}
           </button>
           <Link to="/login" className="btn btn-ghost">Login</Link>
           <Link to="/register" className="btn btn-secondary">Register</Link>

@@ -19,6 +19,15 @@ const TYPE_COLOR: Record<EntryType, string> = {
   Design: "var(--design)",
   Meeting: "var(--meeting)",
   Milestone: "var(--milestone)",
+  Testing: "var(--testing)",
+  Discussion: "var(--discussion)",
+  Research: "var(--research)",
+  Documentation: "var(--documentation)",
+  Planning: "var(--planning)",
+  Review: "var(--review)",
+  Bug: "var(--bug)",
+  Deployment: "var(--deployment)",
+  Release: "var(--release)",
 };
 
 function timeAgo(iso: string): string {

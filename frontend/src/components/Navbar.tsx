@@ -1,5 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Building2, FolderGit2 } from "lucide-react";
+import { MoonIcon } from "@/components/icons/MoonIcon";
 import { api, TOKEN_KEY } from "@/lib/api";
 import { InviteModal } from "./InviteModal";
 
@@ -16,9 +18,12 @@ interface Props {
   showBack?: boolean;
   title?: string;
   hideOrgInvite?: boolean;
+  showProjectInvites?: boolean;
+  onInviteOrg?: () => void;
+  onInviteProject?: () => void;
 }
 
-export function Navbar({ showBack, title, hideOrgInvite }: Props) {
+export function Navbar({ showBack, title, hideOrgInvite, showProjectInvites, onInviteOrg, onInviteProject }: Props) {
   const [me, setMe] = useState<Me | null>(null);
   const [showInvite, setShowInvite] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">(() => {
@@ -63,8 +68,32 @@ export function Navbar({ showBack, title, hideOrgInvite }: Props) {
           title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
           aria-label="Toggle theme"
         >
-          {theme === "dark" ? "☀" : "☾"}
+          {theme === "dark" ? "☀" : <MoonIcon size={16} style={{ display: "inline-block", verticalAlign: "-3px" }} />}
         </button>
+        {showProjectInvites && isOwner && (
+          <div className="split-share" role="group" aria-label="Invite">
+            {me?.org_id != null && onInviteOrg && (
+              <button
+                className="split-share-half"
+                onClick={onInviteOrg}
+                title="Invite to Organization"
+                aria-label="Invite to Organization"
+              >
+                <Building2 size={16} />
+              </button>
+            )}
+            {onInviteProject && (
+              <button
+                className="split-share-half"
+                onClick={onInviteProject}
+                title="Invite to Project"
+                aria-label="Invite to Project"
+              >
+                <FolderGit2 size={16} />
+              </button>
+            )}
+          </div>
+        )}
         {!hideOrgInvite && isOwner && me?.org_id != null && (
           <button className="btn btn-secondary" onClick={() => setShowInvite(true)}>
             Invite to Org

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { MessageSquareText, X } from "lucide-react";
 import { api } from "@/lib/api";
 
 interface Msg {
@@ -62,14 +63,14 @@ export function TimelineChatbot({ projectId }: Props) {
   return (
     <>
       <button
-        className="chatbot-fab"
+        className="chatbot-fab chatbot-fab-icon"
         style={{ left: 24, right: "auto" }}
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? "Close timeline assistant" : "Open timeline assistant"}
       >
-        <span className="chatbot-fab-dot" />
-        {open ? "Close Timeline" : "Ask Timeline"}
+        {open ? <X size={20} strokeWidth={1.75} /> : <MessageSquareText size={18} strokeWidth={1.75} />}
       </button>
+
 
       {open && (
         <aside

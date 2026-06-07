@@ -1,10 +1,51 @@
-export type EntryType = "Dev" | "Business" | "Design" | "Meeting" | "Milestone";
+export type EntryType =
+  | "Dev"
+  | "Business"
+  | "Design"
+  | "Meeting"
+  | "Milestone"
+  | "Testing"
+  | "Discussion"
+  | "Research"
+  | "Documentation"
+  | "Planning"
+  | "Review"
+  | "Bug"
+  | "Deployment"
+  | "Release";
+
+export const ENTRY_TYPES: EntryType[] = [
+  "Dev",
+  "Business",
+  "Design",
+  "Meeting",
+  "Milestone",
+  "Testing",
+  "Discussion",
+  "Research",
+  "Documentation",
+  "Planning",
+  "Review",
+  "Bug",
+  "Deployment",
+  "Release",
+];
 
 export interface TimelineLink {
   id: number;
   url: string;
   label: string | null;
   timeline_entry_id: number;
+}
+
+export interface TimelineAttachment {
+  id: number;
+  file_name: string;
+  file_url: string;
+  file_type: string; // "image" | "video" | "document"
+  label?: string | null;
+  timeline_entry_id: number;
+  uploaded_at: string;
 }
 
 export interface TimelineEntry {
@@ -17,6 +58,7 @@ export interface TimelineEntry {
   added_by_email: string;
   created_at: string;
   links: TimelineLink[];
+  attachments?: TimelineAttachment[];
 }
 
 export interface Project {
