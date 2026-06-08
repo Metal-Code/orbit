@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from core.database import engine, Base
-
+import os
 from models.organization import Organization
 from models.user import User
 from models.project import Project
@@ -19,7 +19,12 @@ app = FastAPI(title="DevCycle API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080", "http://localhost:8081", "http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:8080", 
+        "http://localhost:8081", 
+        "http://localhost:5173",
+        os.getenv("FRONTEND_URL", "")
+        ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
