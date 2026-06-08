@@ -73,7 +73,7 @@ export function Navbar({ showBack, title, hideOrgInvite, showProjectInvites, onI
         >
           {theme === "dark" ? "☀" : <MoonIcon size={16} style={{ display: "inline-block", verticalAlign: "-3px" }} />}
         </button>
-        {showProjectInvites && isOwner && (
+        {showProjectInvites && (
           <div className="split-share" role="group" aria-label="Invite">
             {onInviteProject && (
               <button
@@ -85,7 +85,7 @@ export function Navbar({ showBack, title, hideOrgInvite, showProjectInvites, onI
                 <FolderGit2 size={16} />
               </button>
             )}
-            {me?.org_id != null && onInviteOrg && (
+            {isOwner && me?.org_id != null && onInviteOrg && (
               <button
                 className="split-share-half"
                 onClick={onInviteOrg}

@@ -1,8 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { MoonIcon } from "@/components/icons/MoonIcon";
 import { HeroTimeline } from "@/components/HeroTimeline";
-import { OrbitLogo } from "@/components/OrbitLogo";
+import { MarketingNav } from "@/components/MarketingNav";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -40,34 +39,7 @@ function Landing() {
         color: "var(--text)",
       }}
     >
-      {/* Nav */}
-      <nav
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 10,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "18px 28px",
-        }}
-      >
-        <OrbitLogo size={22} />
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <button
-            className="btn btn-ghost"
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            {theme === "dark" ? "☀" : <MoonIcon size={16} style={{ display: "inline-block", verticalAlign: "-3px" }} />}
-          </button>
-          <Link to="/login" className="btn btn-ghost">Login</Link>
-          <Link to="/register" className="btn btn-secondary">Register</Link>
-        </div>
-      </nav>
+      <MarketingNav theme={theme} onToggleTheme={toggleTheme} />
 
       {/* Split layout: text left, video right */}
       <div

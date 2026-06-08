@@ -199,8 +199,8 @@ function TimelinePage() {
         showBack
         title={project?.name}
         hideOrgInvite
-        showProjectInvites={isOwner}
-        onInviteOrg={orgId != null ? () => setShowInviteOrg(true) : undefined}
+        showProjectInvites
+        onInviteOrg={isOwner && orgId != null ? () => setShowInviteOrg(true) : undefined}
         onInviteProject={() => setShowShare(true)}
       />
       <div className="timeline-header">
