@@ -3,7 +3,7 @@ import { useState } from "react";
 import { api } from "@/lib/api";
 
 export const Route = createFileRoute("/register")({
-  head: () => ({ meta: [{ title: "Register — DevCycle" }] }),
+  head: () => ({ meta: [{ title: "Register — Orbit" }] }),
   component: RegisterPage,
 });
 

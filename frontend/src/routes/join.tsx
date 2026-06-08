@@ -3,11 +3,11 @@ import { useEffect, useRef } from "react";
 import { api, TOKEN_KEY } from "@/lib/api";
 
 export const Route = createFileRoute("/join")({
-  head: () => ({ meta: [{ title: "Join — DevCycle" }] }),
+  head: () => ({ meta: [{ title: "Join — Orbit" }] }),
   component: JoinPage,
 });
 
-const PENDING_INVITE_KEY = "devcycle.pending_invite";
+const PENDING_INVITE_KEY = "orbit.pending_invite";
 
 function JoinPage() {
   const navigate = useNavigate();

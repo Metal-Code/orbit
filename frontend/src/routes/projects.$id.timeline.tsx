@@ -13,16 +13,16 @@ import { api, TOKEN_KEY } from "@/lib/api";
 import { ENTRY_TYPES, type EntryType, type Project, type TimelineEntry } from "@/lib/types";
 
 export const Route = createFileRoute("/projects/$id/timeline")({
-  head: () => ({ meta: [{ title: "Timeline — DevCycle" }] }),
+  head: () => ({ meta: [{ title: "Timeline — Orbit" }] }),
   component: TimelinePage,
 });
 
 const DEFAULT_LEFT_TYPES: EntryType[] = ["Dev", "Design", "Testing", "Bug", "Deployment"];
 type Order = "oldTop" | "newTop";
 type Layout = "alternate" | "category";
-const ORDER_KEY = "devcycle.timeline.order"; // { [projectId]: Order }
-const LAYOUT_KEY = "devcycle.timeline.layout"; // { [projectId]: Layout }
-const LEFT_TYPES_KEY = "devcycle.timeline.leftTypes"; // { [projectId]: EntryType[] }
+const ORDER_KEY = "orbit.timeline.order"; // { [projectId]: Order }
+const LAYOUT_KEY = "orbit.timeline.layout"; // { [projectId]: Layout }
+const LEFT_TYPES_KEY = "orbit.timeline.leftTypes"; // { [projectId]: EntryType[] }
 
 function readLeftTypes(id: string): EntryType[] {
   if (typeof window === "undefined") return DEFAULT_LEFT_TYPES;

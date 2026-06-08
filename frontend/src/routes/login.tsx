@@ -4,7 +4,7 @@ import { api, TOKEN_KEY } from "@/lib/api";
 import { OrgSetupModal } from "@/components/OrgSetupModal";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Login — DevCycle" }] }),
+  head: () => ({ meta: [{ title: "Login — Orbit" }] }),
   component: LoginPage,
 });
 
@@ -23,11 +23,11 @@ function LoginPage() {
       const r = await api.post("/auth/login", { email, password });
       localStorage.setItem(TOKEN_KEY, r.data.access_token);
       const me = await api.get("/auth/me");
-      const pending = localStorage.getItem("devcycle.pending_invite");
+      const pending = localStorage.getItem("orbit.pending_invite");
 
       if (me.data.org_id == null) {
         if (pending) {
-          localStorage.removeItem("devcycle.pending_invite");
+          localStorage.removeItem("orbit.pending_invite");
           try {
             await api.post(`/organizations/join?invite_code=${encodeURIComponent(pending)}`);
             navigate({ to: "/dashboard" });

@@ -2,11 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { MoonIcon } from "@/components/icons/MoonIcon";
 import { HeroTimeline } from "@/components/HeroTimeline";
+import { OrbitLogo } from "@/components/OrbitLogo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "DevCycle — The complete story of how YOUR Product is being built" },
+      { title: "Orbit — The complete story of how YOUR Product is being built" },
       { name: "description", content: "Track every decision, milestone, and commit from day one and beyond." },
     ],
   }),
@@ -16,12 +17,12 @@ export const Route = createFileRoute("/")({
 function Landing() {
   const [theme, setTheme] = useState<"dark" | "light">(() => {
     if (typeof window === "undefined") return "dark";
-    return (localStorage.getItem("devcycle.theme") as "dark" | "light") || "dark";
+    return (localStorage.getItem("orbit.theme") as "dark" | "light") || "dark";
   });
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("devcycle.theme", theme);
+    localStorage.setItem("orbit.theme", theme);
   }, [theme]);
 
   const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
@@ -53,7 +54,7 @@ function Landing() {
           padding: "18px 28px",
         }}
       >
-        <div style={{ fontWeight: 600, fontSize: 15, letterSpacing: "-0.01em" }}>DevCycle</div>
+        <OrbitLogo size={22} />
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <button
             className="btn btn-ghost"

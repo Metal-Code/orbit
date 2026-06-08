@@ -1,17 +1,19 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
+import { FolderGit2 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { NewProjectModal } from "@/components/NewProjectModal";
 import { JoinProjectModal } from "@/components/JoinProjectModal";
+import { ShareProjectModal } from "@/components/ShareProjectModal";
 import { api, TOKEN_KEY } from "@/lib/api";
 import type { EntryType, Project, TimelineEntry } from "@/lib/types";
 
 export const Route = createFileRoute("/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — DevCycle" }] }),
+  head: () => ({ meta: [{ title: "Dashboard — Orbit" }] }),
   component: Dashboard,
 });
 
-const PENDING_INVITE_KEY = "devcycle.pending_invite";
+const PENDING_INVITE_KEY = "orbit.pending_invite";
 
 const TYPE_COLOR: Record<EntryType, string> = {
   Dev: "var(--dev)",
@@ -47,6 +49,7 @@ function Dashboard() {
   const [recent, setRecent] = useState<Record<number, TimelineEntry[]>>({});
   const [showNew, setShowNew] = useState(false);
   const [showJoin, setShowJoin] = useState(false);
+  const [shareProjectId, setShareProjectId] = useState<number | null>(null);
   const navigate = useNavigate();
 
   const load = useCallback(async () => {
@@ -111,7 +114,7 @@ function Dashboard() {
           <div className="project-grid">
             {projects.map((p) => {
               const orderMap = (() => {
-                try { return JSON.parse(localStorage.getItem("devcycle.timeline.order") ?? "{}"); }
+                try { return JSON.parse(localStorage.getItem("orbit.timeline.order") ?? "{}"); }
                 catch { return {}; }
               })();
               const isOldTop = orderMap[String(p.id)] === "oldTop";
@@ -138,10 +141,19 @@ function Dashboard() {
                     )}
                   </div>
                   <div className="meta">Created {new Date(p.created_at).toLocaleDateString()}</div>
-                  <div className="actions">
+                  <div className="actions" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
                     <Link to="/projects/$id/timeline" params={{ id: String(p.id) }} className="btn btn-secondary">
                       View Timeline →
                     </Link>
+                    <button
+                      className="split-share-half"
+                      onClick={() => setShareProjectId(p.id)}
+                      title="Share project"
+                      aria-label="Share project"
+                      style={{ borderRadius: 8 }}
+                    >
+                      <FolderGit2 size={16} />
+                    </button>
                   </div>
                 </div>
               );
@@ -160,6 +172,9 @@ function Dashboard() {
           onClose={() => setShowJoin(false)}
           onJoined={() => { setShowJoin(false); load(); }}
         />
+      )}
+      {shareProjectId != null && (
+        <ShareProjectModal projectId={shareProjectId} onClose={() => setShareProjectId(null)} />
       )}
     </div>
   );

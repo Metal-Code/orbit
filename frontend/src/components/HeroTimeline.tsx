@@ -267,7 +267,7 @@ export function HeroTimeline({ theme }: { theme: Theme }) {
           opacity: 0.7,
         }}
       >
-        DEVCYCLE.APP
+        ORBIT.APP
       </div>
     </div>
   );

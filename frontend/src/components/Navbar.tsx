@@ -2,6 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Building2, FolderGit2 } from "lucide-react";
 import { MoonIcon } from "@/components/icons/MoonIcon";
+import { OrbitLogo } from "@/components/OrbitLogo";
 import { api, TOKEN_KEY } from "@/lib/api";
 import { InviteModal } from "./InviteModal";
 
@@ -28,13 +29,13 @@ export function Navbar({ showBack, title, hideOrgInvite, showProjectInvites, onI
   const [showInvite, setShowInvite] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">(() => {
     if (typeof window === "undefined") return "dark";
-    return (localStorage.getItem("devcycle.theme") as "dark" | "light") || "dark";
+    return (localStorage.getItem("orbit.theme") as "dark" | "light") || "dark";
   });
   const navigate = useNavigate();
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("devcycle.theme", theme);
+    localStorage.setItem("orbit.theme", theme);
   }, [theme]);
 
   useEffect(() => {
@@ -58,7 +59,9 @@ export function Navbar({ showBack, title, hideOrgInvite, showProjectInvites, onI
         {showBack && (
           <Link to="/dashboard" className="btn btn-ghost">← Back to Projects</Link>
         )}
-        <Link to="/dashboard" className="navbar-logo">{title ?? "DevCycle"}</Link>
+        <Link to="/dashboard" className="navbar-logo" style={{ display: "inline-flex", alignItems: "center" }}>
+          {title ? title : <OrbitLogo size={26} />}
+        </Link>
       </div>
       <div className="navbar-center"></div>
       <div className="navbar-right">
@@ -72,16 +75,6 @@ export function Navbar({ showBack, title, hideOrgInvite, showProjectInvites, onI
         </button>
         {showProjectInvites && isOwner && (
           <div className="split-share" role="group" aria-label="Invite">
-            {me?.org_id != null && onInviteOrg && (
-              <button
-                className="split-share-half"
-                onClick={onInviteOrg}
-                title="Invite to Organization"
-                aria-label="Invite to Organization"
-              >
-                <Building2 size={16} />
-              </button>
-            )}
             {onInviteProject && (
               <button
                 className="split-share-half"
@@ -92,11 +85,27 @@ export function Navbar({ showBack, title, hideOrgInvite, showProjectInvites, onI
                 <FolderGit2 size={16} />
               </button>
             )}
+            {me?.org_id != null && onInviteOrg && (
+              <button
+                className="split-share-half"
+                onClick={onInviteOrg}
+                title="Invite to Organization"
+                aria-label="Invite to Organization"
+              >
+                <Building2 size={16} />
+              </button>
+            )}
           </div>
         )}
         {!hideOrgInvite && isOwner && me?.org_id != null && (
-          <button className="btn btn-secondary" onClick={() => setShowInvite(true)}>
-            Invite to Org
+          <button
+            className="split-share-half"
+            onClick={() => setShowInvite(true)}
+            title="Invite to Organization"
+            aria-label="Invite to Organization"
+            style={{ borderRadius: 8 }}
+          >
+            <Building2 size={16} />
           </button>
         )}
         {me && (

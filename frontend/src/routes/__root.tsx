@@ -77,7 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "DevCycle" },
+      { title: "Orbit" },
       { name: "description", content: "Track every decision, milestone, and commit from day one to launch." },
     ],
     links: [
@@ -111,7 +111,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   useEffect(() => {
-    const saved = (localStorage.getItem("devcycle.theme") as "dark" | "light") || "dark";
+    const saved = (localStorage.getItem("orbit.theme") as "dark" | "light") || "dark";
     document.documentElement.setAttribute("data-theme", saved);
   }, []);
 
