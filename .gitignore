@@ -19,3 +19,4 @@ frontend/.env
 Thumbs.db
 *.log
 frontend1
+frontend/.vercel
