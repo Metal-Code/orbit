@@ -241,6 +241,7 @@ function ReportPage() {
                   />
                   {files.length > 0 && (
                     <ul
+                      className="[scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                       style={{
                         listStyle: "none",
                         display: "flex",
@@ -266,9 +267,30 @@ function ReportPage() {
                             borderRadius: 6,
                           }}
                         >
-                          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                            {f.name} <span style={{ color: "var(--text-dim)" }}>· {(f.size / 1024).toFixed(0)} KB</span>
-                          </span>
+                          {(() => {
+                            const previewable = f.type.startsWith("image/") || f.type.startsWith("video/");
+                            const openPreview = () => {
+                              if (!previewable) return;
+                              const url = URL.createObjectURL(f);
+                              const w = window.open(url, "_blank");
+                              if (w) setTimeout(() => URL.revokeObjectURL(url), 60_000);
+                            };
+                            return (
+                              <span
+                                onClick={openPreview}
+                                title={previewable ? "Click to preview" : undefined}
+                                style={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                  cursor: previewable ? "pointer" : "default",
+                                  flex: 1,
+                                }}
+                              >
+                                {f.name} <span style={{ color: "var(--text-dim)" }}>· {(f.size / 1024).toFixed(0)} KB</span>
+                              </span>
+                            );
+                          })()}
                           <button
                             type="button"
                             onClick={() => removeFile(i)}
