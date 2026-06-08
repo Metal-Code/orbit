@@ -36,8 +36,9 @@ function ReportPage() {
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const addFiles = (list: FileList | null) => {
-    if (!list) return;
-    setFiles((prev) => [...prev, ...Array.from(list)]);
+    if (!list || list.length === 0) return;
+    const incoming = Array.from(list);
+    setFiles((prev) => [...prev, ...incoming]);
   };
 
   const removeFile = (idx: number) => setFiles((prev) => prev.filter((_, i) => i !== idx));
