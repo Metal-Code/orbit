@@ -45,8 +45,8 @@ function ReportPage() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr("");
-    if (!description.trim() || !fullName.trim() || !email.trim()) {
-      setErr("Please fill in all required fields.");
+    if (!description.trim()) {
+      setErr("Please describe the issue.");
       return;
     }
     setLoading(true);
@@ -194,28 +194,22 @@ function ReportPage() {
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <div className="field" style={{ margin: 0 }}>
-                  <label className="label">
-                    Full name <span style={{ color: "var(--bug)" }}>*</span>
-                  </label>
+                  <label className="label">Full name</label>
                   <input
                     className="input"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    required
-                    placeholder="Your name"
+                    placeholder="Your name (optional)"
                   />
                 </div>
                 <div className="field" style={{ margin: 0 }}>
-                  <label className="label">
-                    Email <span style={{ color: "var(--bug)" }}>*</span>
-                  </label>
+                  <label className="label">Email</label>
                   <input
                     className="input"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    required
-                    placeholder="you@example.com"
+                    placeholder="you@example.com (optional)"
                   />
                 </div>
               </div>
@@ -242,7 +236,7 @@ function ReportPage() {
                     type="file"
                     multiple
                     hidden
-                    onChange={(e) => { addFiles(e.target.files); e.currentTarget.value = ""; }}
+                    onChange={(e) => { addFiles(e.target.files); if (fileRef.current) fileRef.current.value = ""; }}
                   />
                   {files.length > 0 && (
                     <ul

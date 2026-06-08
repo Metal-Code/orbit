@@ -10,8 +10,8 @@ router = APIRouter(prefix="/report", tags=["Report"])
 @router.post("/")
 async def send_report(
     description: str = Form(...),
-    full_name: str = Form(...),
-    email: str = Form(...),
+    full_name: Optional[str] = Form(None),
+    email: Optional[str] = Form(None),
     attachments: Optional[List[UploadFile]] = File(None)
 ):
     attachment_list = []
@@ -27,11 +27,11 @@ async def send_report(
     resend.Emails.send({
         "from": "onboarding@resend.dev",
         "to": REPORT_EMAIL,
-        "subject": f"New Report from {full_name}",
+        "subject": f"New Report from {full_name or 'Anonymous'}",
         "html": f"""
             <h2>New Report Submitted</h2>
-            <p><strong>Name:</strong> {full_name}</p>
-            <p><strong>Email:</strong> {email}</p>
+            <p><strong>Name:</strong> {full_name or 'Not provided'}</p>
+            <p><strong>Email:</strong> {email or 'Not provided'}</p>
             <p><strong>Description:</strong></p>
             <p>{description}</p>
         """,
