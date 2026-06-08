@@ -10,6 +10,7 @@ class Attachment(Base):
     file_name = Column(String, nullable=False)
     file_url = Column(String, nullable=False)
     file_type = Column(String, nullable=False)
+    label = Column(String, nullable=True)
     timeline_entry_id = Column(Integer, ForeignKey("timeline_entries.id"), nullable=False)
     uploaded_at = Column(DateTime, default=datetime.utcnow)
 

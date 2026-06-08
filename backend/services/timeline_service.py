@@ -31,6 +31,7 @@ def create_entry(db: Session, project_id: int, entry_data: TimelineEntryCreate, 
             file_name=attachment.file_name,
             file_url=attachment.file_url,
             file_type=attachment.file_type,
+            label=attachment.label,
             timeline_entry_id=new_entry.id
         )
         db.add(new_attachment)
