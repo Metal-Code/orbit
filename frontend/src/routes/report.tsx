@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Paperclip, X } from "lucide-react";
 import { MarketingNav } from "@/components/MarketingNav";
-import { api } from "@/lib/api";
 
 export const Route = createFileRoute("/report")({
   head: () => ({
@@ -46,22 +45,28 @@ function ReportPage() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr("");
-    if (!description.trim()) {
-      setErr("Please describe the issue.");
+    if (!description.trim() || !fullName.trim() || !email.trim()) {
+      setErr("Please fill in all required fields.");
       return;
     }
     setLoading(true);
     try {
       const fd = new FormData();
+      fd.append("full_name", fullName.trim());
+      fd.append("email", email.trim());
       fd.append("description", description.trim());
-      if (fullName.trim()) fd.append("full_name", fullName.trim());
-      if (email.trim()) fd.append("email", email.trim());
       files.forEach((f) => fd.append("attachments", f));
-      await api.post("/report", fd, { headers: { "Content-Type": "multipart/form-data" } });
+      const API_URL = import.meta.env.VITE_API_URL ?? "https://orbit-met4.onrender.com";
+      const response = await fetch(`${API_URL}/report/`, {
+        method: "POST",
+        body: fd,
+      });
+      if (!response.ok) throw new Error("request failed");
+      await response.json().catch(() => ({}));
       setDone(true);
       setDescription(""); setFullName(""); setEmail(""); setFiles([]);
-    } catch (e: any) {
-      setErr(e?.response?.data?.detail ?? "Could not send your report. Please try again.");
+    } catch {
+      setErr("Failed to send report. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -189,22 +194,28 @@ function ReportPage() {
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <div className="field" style={{ margin: 0 }}>
-                  <label className="label">Full name</label>
+                  <label className="label">
+                    Full name <span style={{ color: "var(--bug)" }}>*</span>
+                  </label>
                   <input
                     className="input"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Optional"
+                    required
+                    placeholder="Your name"
                   />
                 </div>
                 <div className="field" style={{ margin: 0 }}>
-                  <label className="label">Email</label>
+                  <label className="label">
+                    Email <span style={{ color: "var(--bug)" }}>*</span>
+                  </label>
                   <input
                     className="input"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Optional"
+                    required
+                    placeholder="you@example.com"
                   />
                 </div>
               </div>
