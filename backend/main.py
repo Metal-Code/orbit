@@ -12,6 +12,8 @@ from models.attachment import Attachment
 
 from routers import auth, organizations, projects, timeline
 from routers import upload
+from routers import auth, organizations, projects, timeline, upload, report
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -35,6 +37,7 @@ app.include_router(organizations.router)
 app.include_router(projects.router)
 app.include_router(timeline.router)
 app.include_router(upload.router)
+app.include_router(report.router)
 
 @app.get("/")
 def read_root():
