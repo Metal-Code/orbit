@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from core.database import Base
@@ -13,5 +13,8 @@ class User(Base):
     role = Column(String, default='member')
     org_id = Column(Integer, ForeignKey("organizations.id"), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+    is_verified = Column(Boolean, default=False)
+    otp = Column(String, nullable=True)
+    otp_expires_at = Column(DateTime, nullable=True)    
 
     organization = relationship("Organization", back_populates="members")
