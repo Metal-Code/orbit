@@ -183,7 +183,7 @@ function ReportPage() {
                   Issue description <span style={{ color: "var(--bug)" }}>*</span>
                 </label>
                 <textarea
-                  className="input"
+                  className="input [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   required
