@@ -20,7 +20,7 @@ function RegisterPage() {
     setErr(""); setLoading(true);
     try {
       await api.post("/auth/register", { full_name, email, password });
-      navigate({ to: "/login" });
+      navigate({ to: "/verify-otp", search: { email } });
     } catch (e: any) {
       setErr(e?.response?.data?.detail ?? "Registration failed");
     } finally { setLoading(false); }
