@@ -10,7 +10,7 @@ from models.project_member import ProjectMember
 from models.timeline_entry import TimelineEntry
 from models.link import Link
 from models.attachment import Attachment
-
+from models.pending_registration import PendingRegistration
 from routers import auth, organizations, projects, timeline, upload, report
 
 Base.metadata.create_all(bind=engine)

@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { api } from "@/lib/api";
 
@@ -13,14 +13,16 @@ function RegisterPage() {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr(""); setLoading(true);
     try {
       await api.post("/auth/register", { full_name, email, password });
-      navigate({ to: "/verify-otp", search: { email } });
+      const next = `/verify-otp?email=${encodeURIComponent(email)}`;
+      sessionStorage.setItem("orbit.pending_otp_email", email);
+      sessionStorage.setItem("orbit.pending_otp_password", password);
+      window.location.assign(next);
     } catch (e: any) {
       setErr(e?.response?.data?.detail ?? "Registration failed");
     } finally { setLoading(false); }

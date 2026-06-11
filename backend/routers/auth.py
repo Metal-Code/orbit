@@ -2,24 +2,25 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from core.database import get_db
 from schemas.user import UserCreate, UserLogin, UserResponse
-from services.auth_service import register_user, login_user, verify_otp, resend_otp
+from services.auth_service import (
+    initiate_registration, complete_registration,
+    resend_otp, login_user
+)
 from dependencies.auth import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
-@router.post("/register", response_model=UserResponse)
+@router.post("/register")
 def register(user_data: UserCreate, db: Session = Depends(get_db)):
     try:
-        user = register_user(db, user_data)
-        return user
+        return initiate_registration(db, user_data)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.post("/verify-otp")
+@router.post("/verify-otp", response_model=UserResponse)
 def verify(email: str, otp: str, db: Session = Depends(get_db)):
     try:
-        verify_otp(db, email, otp)
-        return {"message": "Email verified successfully"}
+        return complete_registration(db, email, otp)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { api } from "@/lib/api";
+import { api, TOKEN_KEY } from "@/lib/api";
+import { OrgSetupModal } from "@/components/OrgSetupModal";
 
 export const Route = createFileRoute("/verify-otp")({
   head: () => ({ meta: [{ title: "Verify OTP — Orbit" }] }),
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/verify-otp")({
   component: VerifyOtpPage,
 });
 
-const COUNTDOWN = 45;
+const COUNTDOWN = 120;
 
 function VerifyOtpPage() {
   const { email } = Route.useSearch();
@@ -22,6 +23,7 @@ function VerifyOtpPage() {
   const [resending, setResending] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(COUNTDOWN);
   const [expired, setExpired] = useState(false);
+  const [showOrg, setShowOrg] = useState(false);
   const startedAt = useRef(Date.now());
 
   useEffect(() => {
@@ -44,6 +46,33 @@ function VerifyOtpPage() {
       await api.post(
         `/auth/verify-otp?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`,
       );
+      sessionStorage.removeItem("orbit.pending_otp_email");
+      const pwd = sessionStorage.getItem("orbit.pending_otp_password");
+      sessionStorage.removeItem("orbit.pending_otp_password");
+      if (pwd) {
+        try {
+          const r = await api.post("/auth/login", { email, password: pwd });
+          localStorage.setItem(TOKEN_KEY, r.data.access_token);
+          const me = await api.get("/auth/me");
+          const pending = localStorage.getItem("orbit.pending_invite");
+          if (me.data.org_id == null) {
+            if (pending) {
+              localStorage.removeItem("orbit.pending_invite");
+              try {
+                await api.post(`/organizations/join?invite_code=${encodeURIComponent(pending)}`);
+                navigate({ to: "/dashboard" });
+                return;
+              } catch { /* fall through to org setup */ }
+            }
+            setShowOrg(true);
+            return;
+          }
+          navigate({ to: "/dashboard" });
+          return;
+        } catch {
+          // fall back to login screen if auto-login fails
+        }
+      }
       navigate({ to: "/login" });
     } catch (e: any) {
       const detail = e?.response?.data?.detail ?? "";
@@ -56,6 +85,7 @@ function VerifyOtpPage() {
     setErr(""); setInfo(""); setResending(true);
     try {
       await api.post(`/auth/resend-otp?email=${encodeURIComponent(email)}`);
+      sessionStorage.setItem("orbit.pending_otp_email", email);
       setInfo("A new OTP has been sent to your email.");
       setOtp("");
       setExpired(false);
@@ -123,6 +153,7 @@ function VerifyOtpPage() {
           {resending ? "Resending..." : expired ? "Resend OTP" : `Resend in ${secondsLeft}s`}
         </button>
       </form>
+      {showOrg && <OrgSetupModal onDone={() => navigate({ to: "/dashboard" })} />}
     </div>
   );
 }
