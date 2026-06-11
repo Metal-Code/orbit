@@ -10,7 +10,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from core.config import GMAIL_USER, GMAIL_APP_PASSWORD
-
+import threading
 
 
 def generate_otp():
@@ -18,32 +18,29 @@ def generate_otp():
 
 def send_otp_email(email: str, full_name: str, otp: str):
     print(f"OTP for {email}: {otp}")
-    try:
-        msg = MIMEMultipart("alternative")
-        msg["Subject"] = "Your Orbit Verification Code"
-        msg["From"] = GMAIL_USER
-        msg["To"] = email
+    def send():
+        try:
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = "Your Orbit Verification Code"
+            msg["From"] = GMAIL_USER
+            msg["To"] = email
+            html = f"""
+                <div style="font-family: Arial, sans-serif; max-width: 400px; margin: 0 auto;">
+                    <h2>Welcome to Orbit, {full_name}!</h2>
+                    <p>Your verification code is:</p>
+                    <h1 style="letter-spacing: 8px; font-size: 36px;">{otp}</h1>
+                    <p>This code expires in 2 minutes.</p>
+                </div>
+            """
+            msg.attach(MIMEText(html, "html"))
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+                server.login(GMAIL_USER, GMAIL_APP_PASSWORD)
+                server.sendmail(GMAIL_USER, email, msg.as_string())
+            print(f"Email sent to {email}")
+        except Exception as e:
+            print(f"Email failed: {e}")
 
-        html = f"""
-            <div style="font-family: Arial, sans-serif; max-width: 400px; margin: 0 auto;">
-                <h2>Welcome to Orbit, {full_name}!</h2>
-                <p>Your verification code is:</p>
-                <h1 style="letter-spacing: 8px; font-size: 36px; color: #000;">{otp}</h1>
-                <p>This code expires in 45 seconds.</p>
-                <p>If you did not request this, ignore this email.</p>
-            </div>
-        """
-
-        msg.attach(MIMEText(html, "html"))
-
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-            server.login(GMAIL_USER, GMAIL_APP_PASSWORD)
-            server.sendmail(GMAIL_USER, email, msg.as_string())
-
-        print(f"Email sent successfully to {email}")
-
-    except Exception as e:
-        print(f"Email sending failed: {e}")
+    threading.Thread(target=send).start()
 
 
 def initiate_registration(db: Session, user_data: UserCreate):
