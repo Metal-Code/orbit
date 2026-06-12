@@ -1241,6 +1241,7 @@ select {
 
 .chatbot-input-row {
   display: flex;
+  align-items: center;
   gap: 8px;
   padding: 10px;
   border-top: 1px solid var(--border);
@@ -1249,19 +1250,29 @@ select {
 .chatbot-input {
   flex: 1;
   resize: none;
-  max-height: 100px;
+  min-height: 72px;
+  max-height: 140px;
   background: var(--surface-2);
   border: 1px solid var(--border);
   color: var(--text);
-  border-radius: 8px;
-  padding: 9px 11px;
+  border-radius: 10px;
+  padding: 10px 12px;
   font-size: 13px;
+  line-height: 1.4;
   font-family: inherit;
   outline: none;
+  overflow-y: auto;
+  scrollbar-width: none;
 }
+.chatbot-input::-webkit-scrollbar { width: 0; height: 0; display: none; }
 .chatbot-input:focus { border-color: var(--border-strong); }
 .chatbot-send {
-  width: 38px;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--btn-primary-bg);
   color: var(--btn-primary-fg);
   border: none;
