@@ -4,6 +4,7 @@ from models.link import Link
 from models.attachment import Attachment
 from models.user import User
 from schemas.timeline_entry import TimelineEntryCreate
+from rag.vector_store import add_entry_to_vector_store, delete_entry_from_vector_store
 
 def create_entry(db: Session, project_id: int, entry_data: TimelineEntryCreate, current_user: User):
     new_entry = TimelineEntry(
@@ -38,6 +39,10 @@ def create_entry(db: Session, project_id: int, entry_data: TimelineEntryCreate, 
 
     db.commit()
     db.refresh(new_entry)
+
+    embed_text = f"Title: {new_entry.title}\nType: {new_entry.type}\nDescription: {new_entry.description}\nAdded by: {new_entry.added_by_name}\nDate: {new_entry.created_at}"
+    add_entry_to_vector_store(new_entry.id, project_id, embed_text)
+
     return new_entry
 
 def get_entries(db: Session, project_id: int):
@@ -55,6 +60,8 @@ def delete_entry(db: Session, entry_id: int, current_user: User):
     entry = get_entry(db, entry_id)
     if entry.added_by_email != current_user.email and current_user.role != "owner":
         raise ValueError("You can only delete your own entries")
+
+    delete_entry_from_vector_store(entry_id)
     db.delete(entry)
     db.commit()
     return {"message": "Entry deleted"}

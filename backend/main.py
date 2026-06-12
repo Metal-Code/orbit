@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from core.database import engine, Base
 import os
-
 from models.organization import Organization
 from models.user import User
 from models.project import Project
@@ -11,7 +10,8 @@ from models.timeline_entry import TimelineEntry
 from models.link import Link
 from models.attachment import Attachment
 from models.pending_registration import PendingRegistration
-from routers import auth, organizations, projects, timeline, upload, report
+from routers import auth, organizations, projects, timeline, upload, report, chat
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -35,6 +35,7 @@ app.include_router(organizations.router)
 app.include_router(projects.router)
 app.include_router(timeline.router)
 app.include_router(upload.router)
+app.include_router(chat.router)
 app.include_router(report.router)
 
 @app.get("/")

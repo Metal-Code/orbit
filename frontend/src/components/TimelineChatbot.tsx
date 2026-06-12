@@ -34,19 +34,14 @@ export function TimelineChatbot({ projectId }: Props) {
     setLoading(true);
     try {
       const res = await api.post(`/projects/${projectId}/chat`, {
-        message: text,
-        history: next.slice(-10),
+        question: text,
       });
-      const reply: string = res.data?.reply ?? res.data?.message ?? "(no response)";
-      setMessages((m) => [...m, { role: "assistant", content: reply }]);
+      const answer: string = res.data?.answer ?? res.data?.reply ?? "(no response)";
+      setMessages((m) => [...m, { role: "assistant", content: answer }]);
     } catch {
       setMessages((m) => [
         ...m,
-        {
-          role: "assistant",
-          content:
-            "I couldn't reach the chat service. Make sure the backend `/projects/:id/chat` endpoint is running.",
-        },
+        { role: "assistant", content: "Something went wrong, please try again." },
       ]);
     } finally {
       setLoading(false);
