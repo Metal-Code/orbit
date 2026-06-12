@@ -19,7 +19,7 @@ def add_entry_to_vector_store(entry_id: int, project_id: int, text: str, title: 
         documents=[text]
     )
 
-def query_vector_store(question: str, project_id: int, top_k: int = 5):
+def query_vector_store(question: str, project_id: int, top_k: int = 5, max_distance: float = 0.8):
     embedding = get_embedding(question)
     results = collection.query(
         query_embeddings=[embedding],
@@ -30,9 +30,16 @@ def query_vector_store(question: str, project_id: int, top_k: int = 5):
     documents = results.get("documents", [[]])[0]
     metadatas = results.get("metadatas", [[]])[0]
     ids = results.get("ids", [[]])[0]
+    distances = results.get("distances", [[]])[0]
+
+    print(f"\n--- QUERY: '{question}' ---")
+    for i in range(len(documents)):
+        print(f"  distance={distances[i]:.4f}  title={metadatas[i].get('title','')}")
 
     entries = []
     for i in range(len(documents)):
+        if distances[i] > max_distance:
+            continue
         entries.append({
             "entry_id": int(ids[i]),
             "text": documents[i],
