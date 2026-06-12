@@ -11,4 +11,4 @@ psycopg2-binary
 resend
 python-multipart
 chromadb
-mistralai
+mistralai==1.2.5
