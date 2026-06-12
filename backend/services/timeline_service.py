@@ -40,8 +40,28 @@ def create_entry(db: Session, project_id: int, entry_data: TimelineEntryCreate, 
     db.commit()
     db.refresh(new_entry)
 
-    embed_text = f"Title: {new_entry.title}\nType: {new_entry.type}\nDescription: {new_entry.description}\nAdded by: {new_entry.added_by_name}\nDate: {new_entry.created_at}"
-    add_entry_to_vector_store(new_entry.id, project_id, embed_text)
+    links_data = [{"url": link.url, "label": link.label} for link in entry_data.links] if entry_data.links else []
+    attachments_data = [{"url": att.file_url, "label": att.label or att.file_name, "type": att.file_type} for att in entry_data.attachments] if entry_data.attachments else []
+
+    links_text = ", ".join([f"{l['label'] or l['url']}: {l['url']}" for l in links_data]) if links_data else "None"
+    attachments_text = ", ".join([f"{a['label']} ({a['type']})" for a in attachments_data]) if attachments_data else "None"
+
+    embed_text = f"""Title: {new_entry.title}
+    Type: {new_entry.type}
+    Description: {new_entry.description}
+    Added by: {new_entry.added_by_name}
+    Date: {new_entry.created_at}
+    Links: {links_text}
+    Attachments: {attachments_text}"""
+
+    add_entry_to_vector_store(
+        entry_id=new_entry.id,
+        project_id=project_id,
+        text=embed_text,
+        title=new_entry.title,
+        links=links_data,
+        attachments=attachments_data
+    )
 
     return new_entry
 

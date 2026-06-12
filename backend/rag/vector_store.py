@@ -1,15 +1,21 @@
 import chromadb
+import json
 from rag.embedder import get_embedding
 
 client = chromadb.PersistentClient(path="./chroma_db")
 collection = client.get_or_create_collection(name="timeline_entries")
 
-def add_entry_to_vector_store(entry_id: int, project_id: int, text: str):
+def add_entry_to_vector_store(entry_id: int, project_id: int, text: str, title: str, links: list, attachments: list):
     embedding = get_embedding(text)
     collection.add(
         ids=[str(entry_id)],
         embeddings=[embedding],
-        metadatas=[{"project_id": project_id}],
+        metadatas=[{
+            "project_id": project_id,
+            "title": title,
+            "links": json.dumps(links),
+            "attachments": json.dumps(attachments)
+        }],
         documents=[text]
     )
 
@@ -20,8 +26,22 @@ def query_vector_store(question: str, project_id: int, top_k: int = 5):
         n_results=top_k,
         where={"project_id": project_id}
     )
+
     documents = results.get("documents", [[]])[0]
-    return documents
+    metadatas = results.get("metadatas", [[]])[0]
+    ids = results.get("ids", [[]])[0]
+
+    entries = []
+    for i in range(len(documents)):
+        entries.append({
+            "entry_id": int(ids[i]),
+            "text": documents[i],
+            "title": metadatas[i].get("title", ""),
+            "links": json.loads(metadatas[i].get("links", "[]")),
+            "attachments": json.loads(metadatas[i].get("attachments", "[]"))
+        })
+
+    return entries
 
 def delete_entry_from_vector_store(entry_id: int):
     collection.delete(ids=[str(entry_id)])

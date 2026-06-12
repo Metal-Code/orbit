@@ -10,7 +10,7 @@ router = APIRouter(prefix="/projects", tags=["Chat"])
 @router.post("/{project_id}/chat", response_model=ChatResponse)
 def chat(project_id: int, chat_request: ChatRequest, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     try:
-        answer = get_chat_answer(db, project_id, chat_request.question, current_user)
-        return {"answer": answer}
+        result = get_chat_answer(db, project_id, chat_request.question, current_user)
+        return result
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
