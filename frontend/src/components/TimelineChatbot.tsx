@@ -39,7 +39,37 @@ export function TimelineChatbot({ projectId }: Props) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState<Preview | null>(null);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await api.get(`/projects/${projectId}/chat/history`);
+        const items: Array<{ question: string; answer: string; sources?: ChatSource[] }> =
+          Array.isArray(res.data) ? res.data : [];
+        if (cancelled) return;
+        if (items.length > 0) {
+          const restored: Msg[] = [];
+          for (const it of items) {
+            restored.push({ role: "user", content: it.question });
+            restored.push({
+              role: "assistant",
+              content: it.answer,
+              sources: Array.isArray(it.sources) ? it.sources : [],
+            });
+          }
+          setMessages(restored);
+        }
+      } catch {
+        // keep default greeting on error
+      } finally {
+        if (!cancelled) setHistoryLoaded(true);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [projectId]);
 
   useEffect(() => {
     if (!preview) return;

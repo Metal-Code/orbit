@@ -10,7 +10,8 @@ from models.timeline_entry import TimelineEntry
 from models.link import Link
 from models.attachment import Attachment
 from models.pending_registration import PendingRegistration
-from routers import auth, organizations, projects, timeline, upload, report, chat
+from routers import auth, organizations, projects, timeline, upload, report, chat, chat_history
+
 
 
 Base.metadata.create_all(bind=engine)
@@ -36,6 +37,7 @@ app.include_router(projects.router)
 app.include_router(timeline.router)
 app.include_router(upload.router)
 app.include_router(chat.router)
+app.include_router(chat_history.router)
 app.include_router(report.router)
 
 @app.get("/")

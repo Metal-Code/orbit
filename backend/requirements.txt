@@ -12,3 +12,4 @@ resend
 python-multipart
 chromadb
 mistralai==1.2.5
+redis
