@@ -27,6 +27,7 @@ function AboutPage() {
 
   return (
     <div
+      className="marketing-page"
       style={{
         height: "100vh",
         width: "100vw",
@@ -39,6 +40,7 @@ function AboutPage() {
       <MarketingNav theme={theme} onToggleTheme={toggleTheme} />
 
       <div
+        className="marketing-split"
         style={{
           position: "absolute",
           inset: 0,
@@ -103,7 +105,7 @@ function AboutPage() {
             <span style={{ color: "var(--text)", fontWeight: 500 }}>Ayush Kumar</span>
             <span style={{ opacity: 0.4 }}>·</span>
             <a
-              href="https://github.com/Metal-Code"
+              href="https://github.com/ayushkumar"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
@@ -123,7 +125,7 @@ function AboutPage() {
               </svg>
             </a>
             <a
-              href="https://www.linkedin.com/in/ayushkumar2003/"
+              href="https://linkedin.com/in/ayushkumar"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"

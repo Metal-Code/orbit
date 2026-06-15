@@ -55,11 +55,11 @@ export function Navbar({ showBack, title, hideOrgInvite, showProjectInvites, onI
 
   return (
     <nav className="navbar">
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <div className="navbar-left" style={{ display: "flex", alignItems: "center", gap: 16, minWidth: 0 }}>
         {showBack && (
-          <Link to="/dashboard" className="btn btn-ghost">← Back to Projects</Link>
+          <Link to="/dashboard" className="btn btn-ghost navbar-back">← <span className="navbar-back-text">Back to Projects</span></Link>
         )}
-        <Link to="/dashboard" className="navbar-logo" style={{ display: "inline-flex", alignItems: "center" }}>
+        <Link to="/dashboard" className="navbar-logo navbar-title" style={{ display: "inline-flex", alignItems: "center", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {title ? title : <OrbitLogo size={26} />}
         </Link>
       </div>
@@ -110,7 +110,7 @@ export function Navbar({ showBack, title, hideOrgInvite, showProjectInvites, onI
         )}
         {me && (
           <>
-            <span style={{ fontSize: 13 }}>{me.full_name}</span>
+            <span className="navbar-username" style={{ fontSize: 13 }}>{me.full_name}</span>
             <span
               className="badge role-badge"
               title={me.role.charAt(0).toUpperCase() + me.role.slice(1)}
@@ -118,7 +118,7 @@ export function Navbar({ showBack, title, hideOrgInvite, showProjectInvites, onI
             >
               {me.role.charAt(0).toUpperCase()}
             </span>
-            <button className="btn btn-secondary" onClick={logout}>Logout</button>
+            <button className="btn btn-secondary navbar-logout" onClick={logout}>Logout</button>
           </>
         )}
       </div>

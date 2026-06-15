@@ -1334,3 +1334,193 @@ select {
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
 }
 .chatbot-lightbox-label { color: #ddd; font-size: 13px; }
+
+/* ============================================================
+   RESPONSIVE — tablet & mobile
+   ============================================================ */
+
+/* Tablet */
+@media (max-width: 960px) {
+  /* Marketing center nav links — collapse on tablet to avoid overlap */
+  .marketing-nav-center { display: none !important; }
+  .marketing-nav-desktop-actions { display: none !important; }
+  .marketing-menu-toggle { display: flex !important; }
+  .marketing-nav { padding: 14px 20px !important; }
+
+  /* Marketing split layouts stack */
+  .marketing-split {
+    grid-template-columns: 1fr !important;
+    align-items: start !important;
+    gap: 28px !important;
+    padding: 84px 24px 32px !important;
+    overflow-y: auto !important;
+  }
+  .marketing-page { overflow: auto !important; height: auto !important; min-height: 100vh; }
+  .marketing-page > .marketing-split { position: relative !important; inset: auto !important; }
+
+  /* Landing split stacks; hide the animated hero on tablet/mobile */
+  .landing-split {
+    grid-template-columns: 1fr !important;
+  }
+  .landing-visual { display: none !important; }
+  .landing-text { padding: 96px 24px 32px !important; justify-content: flex-start !important; }
+  .landing-page { overflow: auto !important; height: auto !important; min-height: 100vh; }
+  .landing-page > .landing-split { position: relative !important; inset: auto !important; min-height: calc(100vh - 0px); }
+}
+
+/* Mobile */
+@media (max-width: 720px) {
+  body { font-size: 14px; }
+
+  /* Marketing nav: compact */
+  .marketing-nav { padding: 12px 16px !important; gap: 8px !important; }
+  .marketing-nav-right { gap: 4px !important; }
+  .marketing-nav-right .btn { padding: 7px 10px; font-size: 12.5px; }
+
+  /* App navbar: tighten + hide username text */
+  .navbar { padding: 12px 14px; gap: 8px; flex-wrap: nowrap; }
+  .navbar-username { display: none; }
+  .navbar-back-text { display: none; }
+  .navbar-back { padding: 6px 8px; }
+  .navbar-title { font-size: 13px; max-width: 50vw; }
+  .navbar-right { gap: 6px; }
+  .navbar-right .btn { padding: 7px 10px; font-size: 12.5px; }
+  .navbar-logout { padding: 6px 10px; }
+  .split-share { height: 32px; }
+  .split-share-half { padding: 0 10px; }
+
+  /* Page padding shrink */
+  .page { padding: 20px 16px; }
+  .page-header { flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+  .page-title { font-size: 19px; }
+
+  .project-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .project-card { padding: 18px; min-height: 0; }
+
+  /* Landing heading scale */
+  .landing-h1 { font-size: clamp(28px, 9vw, 40px) !important; }
+
+  /* Auth */
+  .auth-card { padding: 24px; border-radius: 10px; }
+  .auth-shell { padding: 16px; }
+
+  /* Modal */
+  .modal-backdrop { padding: 12px; }
+  .modal { padding: 18px; border-radius: 10px; max-height: 92vh; }
+  .modal-wide { max-width: 100%; }
+
+  /* Detail panel: bottom sheet feel */
+  .panel {
+    width: 100% !important;
+    padding: 20px 18px 28px;
+  }
+  .entry-modal { padding: 20px; }
+
+  /* Report form: stack name + email */
+  .report-name-email {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Link row inside Add Entry modal */
+  .link-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .link-row .icon-btn { justify-self: start; }
+
+  /* Org setup already stacks at 600px — keep */
+
+  /* === Timeline — single column, spine on left === */
+  .timeline-header {
+    padding: 14px 14px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .timeline-header > div { margin-left: 0 !important; flex-wrap: wrap; }
+  .timeline-container {
+    padding: 24px 16px 60px;
+  }
+  .timeline-spine {
+    left: 20px !important;
+    transform: none !important;
+  }
+  .timeline-row {
+    grid-template-columns: 1fr !important;
+    min-height: 0;
+    margin-bottom: 22px;
+    padding-left: 44px;
+  }
+  .timeline-side.left,
+  .timeline-side.right {
+    justify-content: flex-start !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .timeline-entry-card { max-width: 100%; width: 100%; }
+  .timeline-connector {
+    left: 20px !important;
+    right: auto !important;
+    width: 24px !important;
+    top: 28px !important;
+    transform: none !important;
+  }
+  .timeline-node {
+    left: 20px !important;
+    top: 28px !important;
+    transform: translate(-50%, -50%) !important;
+  }
+  .timeline-timestamp {
+    position: static !important;
+    transform: none !important;
+    text-align: left;
+    padding: 0 0 6px !important;
+    background: transparent;
+    display: flex;
+    gap: 6px;
+    font-size: 11px;
+  }
+  .timeline-timestamp > div { display: inline; }
+
+  /* View options popover: keep inside viewport */
+  .view-options-pop { right: 0; left: auto; min-width: 200px; }
+  .category-config-pop { width: min(320px, calc(100vw - 32px)); right: 0; }
+  .cc-board { grid-template-columns: 1fr; }
+  .cc-swap { transform: rotate(90deg); justify-self: center; }
+
+  /* Chatbot — bottom sheet */
+  .chatbot-fab {
+    left: 16px !important;
+    bottom: 16px;
+  }
+  .chatbot-fab-icon { width: 44px; height: 44px; }
+  .chatbot-panel {
+    left: 8px !important;
+    right: 8px !important;
+    top: auto !important;
+    bottom: 76px;
+    width: auto !important;
+    max-width: none !important;
+    height: 70vh;
+    border-radius: 14px;
+  }
+
+  /* Lightbox padding tighter */
+  .chatbot-lightbox { padding: 12px; }
+  .chatbot-lightbox-close { top: 8px; right: 12px; font-size: 28px; }
+
+  /* Hero (legacy) */
+  .hero { padding: 60px 18px 40px; }
+  .hero h1 { font-size: 30px; }
+  .hero p { font-size: 15px; }
+  .features { padding: 0 18px; margin: 24px auto 60px; }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+  .navbar-right .badge.role-badge { display: none; }
+  .marketing-nav-right .btn { padding: 6px 8px; font-size: 12px; }
+}
+

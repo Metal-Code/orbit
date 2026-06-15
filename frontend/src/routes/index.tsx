@@ -30,6 +30,7 @@ function Landing() {
 
   return (
     <div
+      className="marketing-page landing-page"
       style={{
         height: "100vh",
         width: "100vw",
@@ -43,6 +44,7 @@ function Landing() {
 
       {/* Split layout: text left, video right */}
       <div
+        className="landing-split"
         style={{
           position: "absolute",
           inset: 0,
@@ -52,6 +54,7 @@ function Landing() {
       >
         {/* Left: text */}
         <section
+          className="landing-text"
           style={{
             display: "flex",
             flexDirection: "column",
@@ -61,6 +64,7 @@ function Landing() {
           }}
         >
           <div
+            className="landing-eyebrow"
             style={{
               fontFamily: "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace",
               fontSize: 12,
@@ -73,6 +77,7 @@ function Landing() {
             The Build Record →
           </div>
           <h1
+            className="landing-h1"
             style={{
               fontSize: "clamp(34px, 4.6vw, 64px)",
               lineHeight: 1.04,
@@ -110,7 +115,7 @@ function Landing() {
         </section>
 
         {/* Right: CSS-animated timeline (replaces previous video) */}
-        <div style={{ position: "relative", overflow: "hidden" }}>
+        <div className="landing-visual" style={{ position: "relative", overflow: "hidden" }}>
           <HeroTimeline theme={theme} />
           {/* Soft fade into the text column so the seam disappears */}
           <div

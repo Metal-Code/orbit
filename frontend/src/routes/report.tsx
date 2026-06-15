@@ -75,6 +75,7 @@ function ReportPage() {
 
   return (
     <div
+      className="marketing-page"
       style={{
         height: "100vh",
         width: "100vw",
@@ -87,6 +88,7 @@ function ReportPage() {
       <MarketingNav theme={theme} onToggleTheme={toggleTheme} />
 
       <div
+        className="marketing-split"
         style={{
           position: "absolute",
           inset: 0,
@@ -193,7 +195,7 @@ function ReportPage() {
                 />
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div className="report-name-email" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <div className="field" style={{ margin: 0 }}>
                   <label className="label">Full name</label>
                   <input
